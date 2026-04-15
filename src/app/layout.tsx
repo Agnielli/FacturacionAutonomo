@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Link from 'next/link';
+import ThemeToggle from '@/components/ThemeToggle';
 import './globals.css';
 
 const inter = Inter({
@@ -53,16 +54,6 @@ export default function RootLayout({
             </Link>
             <div style={{ display: 'flex', gap: '1.5rem' }}>
               <Link
-                href="/"
-                style={{
-                  color: 'var(--text-secondary)',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s',
-                }}
-              >
-                Dashboard
-              </Link>
-              <Link
                 href="/clientes"
                 style={{
                   color: 'var(--text-secondary)',
@@ -72,6 +63,9 @@ export default function RootLayout({
               >
                 Mis Clientes
               </Link>
+            </div>
+            <div style={{ marginLeft: 'auto' }}>
+              <ThemeToggle />
             </div>
           </div>
         </nav>

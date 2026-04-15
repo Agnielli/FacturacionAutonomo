@@ -10,10 +10,22 @@ export default async function Home() {
   const currentYearInvoices = invoices.filter(
     (inv: any) => new Date(inv.date).getFullYear() === currentYear,
   );
+  
   const currentYearTotal = currentYearInvoices.reduce(
-    (acc: number, inv: any) => acc + inv.total,
+    (acc: number, inv: any) => acc + (inv.total || 0),
     0,
   );
+  const currentYearSubtotal = currentYearInvoices.reduce(
+    (acc: number, inv: any) => acc + (inv.amount || 0),
+    0,
+  );
+  const currentYearVat = currentYearInvoices.reduce(
+    (acc: number, inv: any) => acc + (inv.tax || 0),
+    0,
+  );
+  const currentYearRetention = currentYearSubtotal * 0.19;
+  const currentYearLiquido = currentYearSubtotal - currentYearRetention;
+  
   const currentYearCount = currentYearInvoices.length;
 
   // Grouping logic (using Local Time as per user preference)
@@ -49,74 +61,41 @@ export default async function Home() {
         className="stats-grid"
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: '1.5rem',
           marginBottom: '2.5rem',
         }}
       >
-        <div
-          className="stat-card"
-          style={{
-            background: 'var(--bg-secondary)',
-            padding: '1.5rem',
-            borderRadius: 'var(--radius)',
-            boxShadow: 'var(--shadow-sm)',
-            border: '1px solid var(--border-color)',
-            cursor: 'default',
-          }}
-        >
-          <h3
-            style={{
-              fontSize: '0.875rem',
-              color: 'var(--text-secondary)',
-              marginBottom: '0.5rem',
-              fontWeight: '500',
-            }}
-          >
-            Total Facturado ({currentYear})
+        <div className="stat-card" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)' }}>
+          <h3 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+            Total Facturado (IVA incl.)
           </h3>
-          <p
-            style={{
-              fontSize: '2.25rem',
-              fontWeight: '600',
-              letterSpacing: '-0.025em',
-            }}
-          >
-            €
-            {currentYearTotal.toLocaleString('es-ES', {
-              minimumFractionDigits: 2,
-            })}
+          <p style={{ fontSize: '1.75rem', fontWeight: '600' }}>
+            €{currentYearTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
         </div>
-        <div
-          className="stat-card"
-          style={{
-            background: 'var(--bg-secondary)',
-            padding: '1.5rem',
-            borderRadius: 'var(--radius)',
-            boxShadow: 'var(--shadow-sm)',
-            border: '1px solid var(--border-color)',
-            cursor: 'default',
-          }}
-        >
-          <h3
-            style={{
-              fontSize: '0.875rem',
-              color: 'var(--text-secondary)',
-              marginBottom: '0.5rem',
-              fontWeight: '500',
-            }}
-          >
-            Facturas Emitidas ({currentYear})
+        <div className="stat-card" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)' }}>
+          <h3 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+            Suma de IVA (21%)
           </h3>
-          <p
-            style={{
-              fontSize: '2.25rem',
-              fontWeight: '600',
-              letterSpacing: '-0.025em',
-            }}
-          >
-            {currentYearCount}
+          <p style={{ fontSize: '1.75rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
+            €{currentYearVat.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+          </p>
+        </div>
+        <div className="stat-card" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)' }}>
+          <h3 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+            Retención IRPF (19% s/Base)
+          </h3>
+          <p style={{ fontSize: '1.75rem', fontWeight: '600', color: '#f87171' }}>
+            -€{currentYearRetention.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+          </p>
+        </div>
+        <div className="stat-card" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius)', border: '2px solid var(--accent-primary)', boxShadow: 'var(--shadow-sm)' }}>
+          <h3 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+            Total Líquido ({currentYear})
+          </h3>
+          <p style={{ fontSize: '1.75rem', fontWeight: '700', color: 'var(--accent-primary)' }}>
+            €{currentYearLiquido.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
         </div>
       </div>

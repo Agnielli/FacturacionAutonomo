@@ -45,7 +45,7 @@ export default async function InvoicePage({
           </div>
         </div>
 
-        <div className="invoice-info-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+        <div className="invoice-info-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)', gap: '4rem' }}>
           <div className="info-block">
             <h3>EMISOR</h3>
             <div className="info-content">
@@ -56,9 +56,9 @@ export default async function InvoicePage({
               <p>enrique@saiolab.com</p>
             </div>
           </div>
-          <div className="info-block" style={{ minWidth: 0 }}>
+          <div className="info-block">
             <h3>CLIENTE</h3>
-            <div className="info-content" style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
+            <div className="info-content" style={{ wordBreak: 'normal', whiteSpace: 'normal', overflowWrap: 'anywhere' }}>
               <p>
                 <strong>Nombre:</strong> {invoice.clientName || invoice.client.name}
               </p>
