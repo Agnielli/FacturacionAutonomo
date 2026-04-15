@@ -1,6 +1,7 @@
 import { getInvoices } from '@/lib/actions';
 import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
+import PaidToggle from '@/components/PaidToggle';
 
 export const dynamic = 'force-dynamic';
 
@@ -295,6 +296,18 @@ export default async function Home() {
                                     color: 'var(--text-secondary)',
                                     borderBottom:
                                       '1px solid var(--border-color)',
+                                    textAlign: 'center',
+                                  }}
+                                >
+                                  Estado
+                                </th>
+                                <th
+                                  style={{
+                                    padding: '1rem 2rem',
+                                    fontWeight: '500',
+                                    color: 'var(--text-secondary)',
+                                    borderBottom:
+                                      '1px solid var(--border-color)',
                                     textAlign: 'right',
                                   }}
                                 >
@@ -339,6 +352,14 @@ export default async function Home() {
                                     {inv.total.toLocaleString('es-ES', {
                                       minimumFractionDigits: 2,
                                     })}
+                                  </td>
+                                  <td
+                                    style={{
+                                      padding: '1rem 2rem',
+                                      textAlign: 'center',
+                                    }}
+                                  >
+                                    <PaidToggle id={inv.id} initialStatus={inv.paid} />
                                   </td>
                                   <td
                                     style={{

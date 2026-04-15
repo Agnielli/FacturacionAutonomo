@@ -45,6 +45,15 @@ export async function deleteClient(id: string) {
   return client
 }
 
+export async function toggleInvoicePaid(id: string, paid: boolean) {
+  const invoice = await prisma.invoice.update({
+    where: { id },
+    data: { paid }
+  })
+  revalidatePath('/')
+  return invoice
+}
+
 export async function getInvoiceById(id: string) {
   return await prisma.invoice.findFirst({
     where: { id },

@@ -13,16 +13,15 @@ model Client {
   email     String?
   nif       String?
   address   String?
-  invoices  Invoice[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  invoices  Invoice[]
 }
 
 model Invoice {
-  id            String   @id @default(uuid())
-  invoiceNumber String   @unique
+  id            String        @id @default(uuid())
+  invoiceNumber String        @unique
   date          DateTime
-  client        Client   @relation(fields: [clientId], references: [id])
   clientId      String
   clientName    String?
   clientNif     String?
@@ -30,18 +29,20 @@ model Invoice {
   amount        Float
   tax           Float
   total         Float
+  paid          Boolean       @default(false)
   details       String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  client        Client        @relation(fields: [clientId], references: [id])
   items         InvoiceItem[]
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
 }
 
 model InvoiceItem {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   description String
-  quantity    Float    @default(1)
+  quantity    Float   @default(1)
   unitPrice   Float
   total       Float
-  invoice     Invoice  @relation(fields: [invoiceId], references: [id])
   invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id])
 }
