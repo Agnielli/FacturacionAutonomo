@@ -21,55 +21,30 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={inter.variable}>
-      <body>
-        <nav
-          style={{
-            background: 'var(--bg-secondary)',
-            borderBottom: '1px solid var(--border-color)',
-            padding: '1.25rem 0',
-          }}
-        >
-          <div
-            className="container"
-            style={{
-              display: 'flex',
-              gap: '2.5rem',
-              fontWeight: 500,
-              alignItems: 'center',
-            }}
-          >
+      <body className="bg-bg-primary text-text-primary font-sans antialiased">
+        <nav className="bg-bg-secondary border-b border-border-base py-5 no-print">
+          <div className="container flex gap-10 font-medium items-center">
             <Link
               href="/"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.75rem',
-                color: 'var(--text-primary)',
-                fontSize: '1.25rem',
-                fontWeight: 700,
-              }}
+              className="flex items-center gap-3 text-text-primary text-xl font-bold hover:opacity-80 transition-opacity"
             >
-              <span style={{ fontSize: '1.5rem' }}>🧾</span>
+              <span className="text-2xl">🧾</span>
               <span>Sabariego Invoices</span>
             </Link>
-            <div style={{ display: 'flex', gap: '1.5rem' }}>
+            <div className="flex gap-6">
               <Link
                 href="/clientes"
-                style={{
-                  color: 'var(--text-secondary)',
-                  textDecoration: 'none',
-                  transition: 'color 0.2s',
-                }}
+                className="text-text-secondary hover:text-accent-primary transition-colors"
               >
                 Mis Clientes
               </Link>
             </div>
-            <div style={{ marginLeft: 'auto' }}>
+            <div className="ml-auto">
               <ThemeToggle />
             </div>
           </div>
         </nav>
-        <div style={{ paddingTop: '2rem' }}>{children}</div>
+        <main className="pt-8">{children}</main>
       </body>
     </html>
   );

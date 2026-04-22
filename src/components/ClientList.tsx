@@ -28,49 +28,53 @@ export default function ClientList({ initialClients }: { initialClients: any[] }
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1.5rem' }}>
-        <button onClick={handleNew} className="btn btn-primary">+ Nuevo Cliente</button>
+      <div className="flex justify-end mb-6">
+        <button onClick={handleNew} className="btn-primary">
+          <span className="mr-2">+</span> Nuevo Cliente
+        </button>
       </div>
 
-      <div style={{
-          background: 'var(--bg-secondary)',
-          borderRadius: 'var(--radius)',
-          boxShadow: 'var(--shadow-sm)',
-          border: '1px solid var(--border-color)',
-          overflow: 'hidden'
-      }}>
-        <div style={{ padding: '1.5rem 2rem', borderBottom: '1px solid var(--border-color)' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: '600' }}>Directorio</h2>
+      <div className="bg-bg-secondary rounded-custom shadow-custom-sm border border-border-base overflow-hidden">
+        <div className="px-8 py-6 border-b border-border-base">
+          <h2 className="text-xl font-semibold text-text-primary">Directorio de Clientes</h2>
         </div>
         
         {initialClients.length === 0 ? (
-          <div style={{ padding: '4rem 2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.5 }}>👥</div>
-            <p style={{ fontSize: '1.1rem' }}>No tienes clientes guardados todavía.</p>
-            <p style={{ fontSize: '0.9rem', marginTop: '0.5rem' }}>Crear una factura con un cliente nuevo lo guardará aquí automáticamente.</p>
+          <div className="px-8 py-16 text-center text-text-secondary">
+            <div className="text-5xl mb-4 opacity-50">👥</div>
+            <p className="text-lg font-medium">No tienes clientes guardados todavía.</p>
+            <p className="text-sm mt-2">Crear una factura con un cliente nuevo lo guardará aquí automáticamente.</p>
           </div>
         ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr style={{ background: 'var(--bg-primary)' }}>
-                  <th style={{ padding: '1rem 2rem', fontWeight: '500', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-color)' }}>Nombre</th>
-                  <th style={{ padding: '1rem 2rem', fontWeight: '500', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-color)' }}>NIF</th>
-                  <th style={{ padding: '1rem 2rem', fontWeight: '500', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-color)' }}>Email</th>
-                  <th style={{ padding: '1rem 2rem', fontWeight: '500', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-color)' }}>Dirección</th>
-                  <th style={{ padding: '1rem 2rem', fontWeight: '500', color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-color)', textAlign: 'right' }}>Acciones</th>
+                <tr className="bg-bg-primary">
+                  <th className="px-8 py-4 font-semibold text-sm text-text-secondary border-b border-border-base">Nombre</th>
+                  <th className="px-8 py-4 font-semibold text-sm text-text-secondary border-b border-border-base">NIF</th>
+                  <th className="px-8 py-4 font-semibold text-sm text-text-secondary border-b border-border-base">Email</th>
+                  <th className="px-8 py-4 font-semibold text-sm text-text-secondary border-b border-border-base">Dirección</th>
+                  <th className="px-8 py-4 font-semibold text-sm text-text-secondary border-b border-border-base text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-border-base">
                 {initialClients.map((client: any) => (
-                  <tr key={client.id} className="table-row" style={{ borderBottom: '1px solid var(--border-color)' }}>
-                    <td style={{ padding: '1rem 2rem', fontWeight: '500' }}>{client.name}</td>
-                    <td style={{ padding: '1rem 2rem', color: 'var(--text-secondary)' }}>{client.nif || '-'}</td>
-                    <td style={{ padding: '1rem 2rem', color: 'var(--text-secondary)' }}>{client.email || '-'}</td>
-                    <td style={{ padding: '1rem 2rem', color: 'var(--text-secondary)' }}>{client.address || '-'}</td>
-                    <td style={{ padding: '1rem 2rem', textAlign: 'right' }}>
-                      <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                        <button onClick={() => handleEdit(client)} className="btn-icon" title="Editar">✏️</button>
+                  <tr key={client.id} className="hover:bg-bg-primary/50 transition-colors">
+                    <td className="px-8 py-4 font-medium text-text-primary">{client.name}</td>
+                    <td className="px-8 py-4 text-text-secondary text-sm">{client.nif || '—'}</td>
+                    <td className="px-8 py-4 text-text-secondary text-sm">{client.email || '—'}</td>
+                    <td className="px-8 py-4 text-text-secondary text-sm max-w-xs truncate">{client.address || '—'}</td>
+                    <td className="px-8 py-4">
+                      <div className="flex justify-end gap-2">
+                        <button 
+                          onClick={() => handleEdit(client)} 
+                          className="btn-icon hover:text-accent-primary" 
+                          title="Editar"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                          </svg>
+                        </button>
                         <DeleteButton id={client.id} type="client" />
                       </div>
                     </td>

@@ -36,34 +36,15 @@ export default function PaidToggle({ id, initialStatus }: PaidToggleProps) {
     <button
       onClick={handleToggle}
       disabled={loading}
-      className={`paid-toggle ${isPaid ? 'is-paid' : ''}`}
+      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-offset-2 ${
+        isPaid ? 'bg-emerald-500' : 'bg-border-base'
+      } ${loading ? 'opacity-60 cursor-not-allowed' : 'opacity-100'}`}
       title={isPaid ? 'Marcada como pagada' : 'Marcar como pagada'}
-      style={{
-        width: '44px',
-        height: '24px',
-        background: isPaid ? '#10b981' : 'var(--border-color)',
-        borderRadius: '12px',
-        border: 'none',
-        position: 'relative',
-        cursor: loading ? 'not-allowed' : 'pointer',
-        transition: 'background-color 0.2s',
-        opacity: loading ? 0.6 : 1,
-        padding: 0,
-        display: 'inline-flex',
-        alignItems: 'center'
-      }}
     >
-      <div
-        style={{
-          width: '18px',
-          height: '18px',
-          background: 'white',
-          borderRadius: '50%',
-          position: 'absolute',
-          left: isPaid ? '22px' : '4px',
-          transition: 'left 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-          boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
-        }}
+      <span
+        className={`inline-block h-4.5 w-4.5 transform rounded-full bg-white transition-transform duration-200 ease-in-out shadow-sm ${
+          isPaid ? 'translate-x-5.5' : 'translate-x-1'
+        }`}
       />
     </button>
   )

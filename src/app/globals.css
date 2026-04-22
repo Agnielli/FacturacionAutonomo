@@ -1,183 +1,98 @@
-:root {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --accent-primary: #4f46e5;
-  --accent-hover: #4338ca;
-  --border-color: #e2e8f0;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --radius: 0.75rem;
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-family), system-ui, sans-serif;
+  
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #ffffff;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-accent-primary: #4f46e5;
+  --color-accent-hover: #4338ca;
+  --color-border-base: #e2e8f0;
+  
+  --radius-custom: 0.75rem;
+  
+  --shadow-custom-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-custom: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
+/* Dark mode overrides using Tailwind v4 @theme syntax */
 [data-theme='dark'] {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --accent-primary: #6366f1;
-  --accent-hover: #818cf8;
-  --border-color: #475569;
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-accent-primary: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-border-base: #475569;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg-primary: #0f172a;
-    --bg-secondary: #1e293b;
-    --text-primary: #f8fafc;
-    --text-secondary: #cbd5e1;
-    --accent-primary: #6366f1;
-    --accent-hover: #818cf8;
-    --border-color: #475569;
+    --color-bg-primary: #0f172a;
+    --color-bg-secondary: #1e293b;
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #cbd5e1;
+    --color-accent-primary: #6366f1;
+    --color-accent-hover: #818cf8;
+    --color-border-base: #475569;
   }
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer base {
+  * {
+    @apply box-border m-0 p-0;
+  }
+
+  body {
+    @apply bg-bg-primary text-text-primary font-sans antialiased leading-relaxed;
+  }
+
+  button {
+    @apply cursor-pointer;
+    font-family: inherit;
+  }
 }
 
-body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: var(--font-family), system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  line-height: 1.5;
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-custom font-medium transition-all duration-200 bg-accent-primary text-white shadow-custom-sm hover:bg-accent-hover hover:-translate-y-px;
+  }
+
+  .form-input {
+    @apply w-full px-4 py-3 border border-border-base rounded-custom bg-bg-primary text-text-primary focus:outline-none focus:border-accent-primary focus:ring-3 focus:ring-accent-primary/10 transition-all duration-200;
+    font-family: inherit;
+  }
+
+  .btn-icon {
+    @apply flex items-center justify-center w-10 h-10 border border-border-base rounded-custom text-text-primary transition-all duration-200 hover:bg-bg-primary hover:-translate-y-px;
+  }
+
+  .container {
+    @apply max-w-[1200px] mx-auto px-4;
+  }
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  font-family: inherit;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-  color: var(--text-primary);
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius);
-  font-weight: 500;
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-primary {
-  background-color: var(--accent-primary);
-  color: white;
-  box-shadow: var(--shadow-sm);
-}
-
-.btn-primary:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-1px);
-}
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 0;
-  border-bottom: 1px solid var(--border-color);
-  margin-bottom: 2rem;
-}
-
-.header h1 {
-  font-size: 1.875rem;
-  font-weight: 600;
-  letter-spacing: -0.025em;
-}
-
-.main-content {
-  padding: 2rem 0;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group.full-width {
-  grid-column: 1 / -1;
-}
-
-.form-label {
-  font-weight: 500;
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-
-.form-input {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  font-family: inherit;
-  font-size: 1rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  width: 100%;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--accent-primary);
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-}
-
-/* Interactivity */
-.stat-card {
-  transition: transform 0.2s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-}
-
-.table-row {
-  transition: background-color 0.15s ease;
-}
-
-.table-row:hover {
-  background-color: var(--bg-primary) !important;
-}
-
-/* Estilos de Factura Impresa */
+/* Specific styles for Invoice Paper (Print focus) */
 .invoice-paper {
+  /* Force light theme variables inside the paper for high contrast */
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #ffffff;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-accent-primary: #4f46e5;
+  --color-border-base: #e2e8f0;
+
   background: white !important;
-  color: #1a1a1a !important;
+  color: #0f172a !important;
   padding: 3rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-custom);
+  box-shadow: var(--shadow-custom);
   max-width: 850px;
   margin: 0 auto;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
 }
 
 .invoice-header {
@@ -295,7 +210,7 @@ h1, h2, h3, h4, h5, h6 {
   text-align: right;
 }
 
-/* Media query para imprimir */
+/* Print specific styles */
 @media print {
   body {
     background: white !important;
@@ -323,23 +238,4 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* Icons and small buttons */
-.btn-icon {
-  background: transparent;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 0.4rem 0.6rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-  font-size: 1.2rem;
-  line-height: 1;
-  display: inline-block;
-}
-
-.btn-icon:hover {
-  background: var(--bg-primary);
-  border-color: var(--primary);
-  transform: translateY(-1px);
-}
 

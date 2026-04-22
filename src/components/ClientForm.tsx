@@ -37,72 +37,64 @@ export default function ClientForm({ client, onClose, onSuccess }: ClientFormPro
   }
 
   return (
-    <div className="modal-overlay" style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      background: 'rgba(0,0,0,0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 1000
-    }}>
-      <div className="modal-content" style={{
-        background: 'var(--bg-primary)',
-        padding: '2rem',
-        borderRadius: 'var(--radius)',
-        width: '100%',
-        maxWidth: '500px',
-        boxShadow: 'var(--shadow-lg)'
-      }}>
-        <h2 style={{ marginBottom: '1.5rem' }}>{client ? 'Editar Cliente' : 'Nuevo Cliente'}</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group" style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Nombre *</label>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-bg-secondary p-8 rounded-custom w-full max-w-[500px] shadow-2xl border border-border-base animate-in fade-in zoom-in duration-200">
+        <h2 className="text-2xl font-bold mb-6 text-text-primary">
+          {client ? 'Editar Cliente' : 'Nuevo Cliente'}
+        </h2>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-text-secondary">Nombre *</label>
             <input
               type="text"
               required
-              className="form-control"
+              className="form-input"
               value={formData.name}
               onChange={e => setFormData({ ...formData, name: e.target.value })}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
           </div>
-          <div className="form-group" style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>NIF/CIF</label>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-text-secondary">NIF/CIF</label>
             <input
               type="text"
-              className="form-control"
+              className="form-input"
               value={formData.nif}
               onChange={e => setFormData({ ...formData, nif: e.target.value })}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
           </div>
-          <div className="form-group" style={{ marginBottom: '1rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Email</label>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-text-secondary">Email</label>
             <input
               type="email"
-              className="form-control"
+              className="form-input"
               value={formData.email}
               onChange={e => setFormData({ ...formData, email: e.target.value })}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)' }}
             />
           </div>
-          <div className="form-group" style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>Dirección</label>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-text-secondary">Dirección</label>
             <textarea
-              className="form-control"
+              className="form-input min-h-[100px] resize-y"
               rows={3}
               value={formData.address}
               onChange={e => setFormData({ ...formData, address: e.target.value })}
-              style={{ width: '100%', padding: '0.75rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)', background: 'var(--bg-secondary)', color: 'var(--text-primary)', resize: 'vertical' }}
             />
           </div>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-            <button type="button" onClick={onClose} className="btn" style={{ background: 'transparent', border: '1px solid var(--border-color)' }}>Cancelar</button>
-            <button type="submit" disabled={loading} className="btn btn-primary">{loading ? 'Guardando...' : 'Guardar Cliente'}</button>
+          <div className="flex gap-3 justify-end pt-4">
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="px-5 py-2 border border-border-base rounded-custom text-text-secondary hover:bg-bg-primary hover:text-text-primary transition-all duration-200"
+            >
+              Cancelar
+            </button>
+            <button 
+              type="submit" 
+              disabled={loading} 
+              className="btn-primary"
+            >
+              {loading ? 'Guardando...' : 'Guardar Cliente'}
+            </button>
           </div>
         </form>
       </div>

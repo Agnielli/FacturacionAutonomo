@@ -45,347 +45,138 @@ export default async function Home() {
   const years = Object.keys(groupedInvoices).sort((a, b) => b.localeCompare(a));
 
   return (
-    <div className="container" style={{ paddingBottom: '4rem' }}>
-      <header className="header">
+    <div className="container pb-16">
+      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
         <div>
-          <h1>Enrique Sabariego García</h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+          <h1 className="text-3xl font-extrabold tracking-tight text-text-primary">Enrique Sabariego García</h1>
+          <p className="text-text-secondary mt-1 font-medium">
             Resumen de tu facturación {currentYear}
           </p>
         </div>
-        <Link href="/facturas/nueva" className="btn btn-primary">
-          Nueva Factura
+        <Link href="/facturas/nueva" className="btn-primary px-6 py-3">
+          <span className="mr-2 text-xl">+</span> Nueva Factura
         </Link>
       </header>
 
-      <div
-        className="stats-grid"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '1.5rem',
-          marginBottom: '2.5rem',
-        }}
-      >
-        <div className="stat-card" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)' }}>
-          <h3 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-transform duration-300">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">
             Total Facturado (IVA incl.)
           </h3>
-          <p style={{ fontSize: '1.75rem', fontWeight: '600' }}>
+          <p className="text-2xl font-bold text-text-primary">
             €{currentYearTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
         </div>
-        <div className="stat-card" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)' }}>
-          <h3 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-transform duration-300">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">
             Suma de IVA (21%)
           </h3>
-          <p style={{ fontSize: '1.75rem', fontWeight: '600', color: 'var(--text-secondary)' }}>
+          <p className="text-2xl font-bold text-text-secondary">
             €{currentYearVat.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
         </div>
-        <div className="stat-card" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius)', border: '1px solid var(--border-color)' }}>
-          <h3 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-transform duration-300">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">
             Retención IRPF (19% s/Base)
           </h3>
-          <p style={{ fontSize: '1.75rem', fontWeight: '600', color: '#f87171' }}>
+          <p className="text-2xl font-bold text-red-500">
             -€{currentYearRetention.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
         </div>
-        <div className="stat-card" style={{ background: 'var(--bg-secondary)', padding: '1.5rem', borderRadius: 'var(--radius)', border: '2px solid var(--accent-primary)', boxShadow: 'var(--shadow-sm)' }}>
-          <h3 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
+        <div className="bg-bg-secondary p-6 rounded-custom border-2 border-accent-primary shadow-lg shadow-accent-primary/5 group hover:-translate-y-1 transition-transform duration-300">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-accent-primary mb-2">
             Total Líquido ({currentYear})
           </h3>
-          <p style={{ fontSize: '1.75rem', fontWeight: '700', color: 'var(--accent-primary)' }}>
+          <p className="text-2xl font-extrabold text-accent-primary">
             €{currentYearLiquido.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
         </div>
       </div>
 
-      <main>
+      <main className="space-y-12">
         {invoices.length === 0 ? (
-          <div
-            style={{
-              padding: '4rem 2rem',
-              textAlign: 'center',
-              color: 'var(--text-secondary)',
-              background: 'var(--bg-secondary)',
-              borderRadius: 'var(--radius)',
-              border: '1px solid var(--border-color)',
-            }}
-          >
-            <div
-              style={{ fontSize: '3rem', marginBottom: '1rem', opacity: 0.5 }}
-            >
-              📄
-            </div>
-            <p style={{ fontSize: '1.1rem' }}>No hay facturas todavía.</p>
+          <div className="py-20 text-center bg-bg-secondary rounded-custom border border-border-base border-dashed">
+            <div className="text-6xl mb-4 opacity-20">📄</div>
+            <p className="text-xl font-medium text-text-secondary">No hay facturas todavía.</p>
+            <p className="text-sm text-text-secondary/60 mt-2">Comienza creando tu primera factura.</p>
           </div>
         ) : (
           years.map((year) => {
-            // Calculate year total
             let yearTotal = 0;
             Object.values(groupedInvoices[year]).forEach((qInvs: any) => {
-              yearTotal += qInvs.reduce(
-                (sum: number, i: any) => sum + i.total,
-                0,
-              );
+              yearTotal += qInvs.reduce((sum: number, i: any) => sum + i.total, 0);
             });
 
             return (
-              <div key={year} style={{ marginBottom: '3rem' }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '1rem',
-                    marginBottom: '1.5rem',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '1rem',
-                    }}
-                  >
-                    <h2 style={{ fontSize: '1.75rem', fontWeight: '700' }}>
-                      {year}
-                    </h2>
-                    <span
-                      style={{
-                        fontSize: '1.1rem',
-                        color: 'var(--text-secondary)',
-                        background: 'var(--bg-primary)',
-                        padding: '0.2rem 0.8rem',
-                        borderRadius: '1rem',
-                        border: '1px solid var(--border-color)',
-                      }}
-                    >
-                      Total año: €
-                      {yearTotal.toLocaleString('es-ES', {
-                        minimumFractionDigits: 2,
-                      })}
-                    </span>
-                  </div>
-                  <div
-                    style={{
-                      height: '2px',
-                      flex: 1,
-                      background: 'var(--border-color)',
-                      opacity: 0.5,
-                    }}
-                  ></div>
+              <div key={year}>
+                <div className="flex items-center gap-4 mb-8">
+                  <h2 className="text-4xl font-black text-text-primary">{year}</h2>
+                  <span className="px-4 py-1 bg-bg-secondary border border-border-base rounded-full text-sm font-bold text-text-secondary shadow-sm">
+                    Total año: €{yearTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                  </span>
+                  <div className="h-px flex-1 bg-border-base opacity-50"></div>
                 </div>
 
-                {Object.keys(groupedInvoices[year])
-                  .sort((a, b) => b.localeCompare(a))
-                  .map((quarter) => {
-                    const qInvoices = [...groupedInvoices[year][quarter]].sort(
-                      (a, b) => {
-                        // Primary sort by invoice number DESC (most reliable for user sequence)
-                        return b.invoiceNumber.localeCompare(
-                          a.invoiceNumber,
-                          undefined,
-                          { numeric: true },
-                        );
-                      },
-                    );
-                    const qTotal = qInvoices.reduce(
-                      (sum: number, i: any) => sum + i.total,
-                      0,
-                    );
+                <div className="space-y-8">
+                  {Object.keys(groupedInvoices[year])
+                    .sort((a, b) => b.localeCompare(a))
+                    .map((quarter) => {
+                      const qInvoices = [...groupedInvoices[year][quarter]].sort((a, b) => 
+                        b.invoiceNumber.localeCompare(a.invoiceNumber, undefined, { numeric: true })
+                      );
+                      const qTotal = qInvoices.reduce((sum: number, i: any) => sum + i.total, 0);
 
-                    return (
-                      <section
-                        key={quarter}
-                        style={{
-                          marginBottom: '2rem',
-                          background: 'var(--bg-secondary)',
-                          borderRadius: 'var(--radius)',
-                          boxShadow: 'var(--shadow-sm)',
-                          border: '1px solid var(--border-color)',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div
-                          style={{
-                            padding: '1.25rem 2rem',
-                            background: 'var(--bg-primary)',
-                            borderBottom: '1px solid var(--border-color)',
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <h3 style={{ fontSize: '1.1rem', fontWeight: '600' }}>
-                            Trimestre {quarter}
-                          </h3>
-                          <span
-                            style={{
-                              fontSize: '1rem',
-                              fontWeight: '500',
-                              color: 'var(--primary)',
-                            }}
-                          >
-                            Subtotal Trimestre: €
-                            {qTotal.toLocaleString('es-ES', {
-                              minimumFractionDigits: 2,
-                            })}
-                          </span>
-                        </div>
-                        <div style={{ overflowX: 'auto' }}>
-                          <table
-                            style={{
-                              width: '100%',
-                              borderCollapse: 'collapse',
-                              textAlign: 'left',
-                            }}
-                          >
-                            <thead>
-                              <tr style={{ background: 'var(--bg-primary)' }}>
-                                <th
-                                  style={{
-                                    padding: '1rem 2rem',
-                                    fontWeight: '500',
-                                    color: 'var(--text-secondary)',
-                                    borderBottom:
-                                      '1px solid var(--border-color)',
-                                  }}
-                                >
-                                  Nº Factura
-                                </th>
-                                <th
-                                  style={{
-                                    padding: '1rem 2rem',
-                                    fontWeight: '500',
-                                    color: 'var(--text-secondary)',
-                                    borderBottom:
-                                      '1px solid var(--border-color)',
-                                  }}
-                                >
-                                  Cliente
-                                </th>
-                                <th
-                                  style={{
-                                    padding: '1rem 2rem',
-                                    fontWeight: '500',
-                                    color: 'var(--text-secondary)',
-                                    borderBottom:
-                                      '1px solid var(--border-color)',
-                                  }}
-                                >
-                                  Fecha
-                                </th>
-                                <th
-                                  style={{
-                                    padding: '1rem 2rem',
-                                    fontWeight: '500',
-                                    color: 'var(--text-secondary)',
-                                    borderBottom:
-                                      '1px solid var(--border-color)',
-                                    textAlign: 'right',
-                                  }}
-                                >
-                                  Total
-                                </th>
-                                <th
-                                  style={{
-                                    padding: '1rem 2rem',
-                                    fontWeight: '500',
-                                    color: 'var(--text-secondary)',
-                                    borderBottom:
-                                      '1px solid var(--border-color)',
-                                    textAlign: 'center',
-                                  }}
-                                >
-                                  Estado
-                                </th>
-                                <th
-                                  style={{
-                                    padding: '1rem 2rem',
-                                    fontWeight: '500',
-                                    color: 'var(--text-secondary)',
-                                    borderBottom:
-                                      '1px solid var(--border-color)',
-                                    textAlign: 'right',
-                                  }}
-                                >
-                                  Acciones
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {qInvoices.map((inv: any) => (
-                                <tr
-                                  key={inv.id}
-                                  className="table-row"
-                                  style={{
-                                    borderBottom:
-                                      '1px solid var(--border-color)',
-                                  }}
-                                >
-                                  <td
-                                    style={{
-                                      padding: '1rem 2rem',
-                                      fontWeight: '500',
-                                    }}
-                                  >
-                                    {inv.invoiceNumber}
-                                  </td>
-                                  <td style={{ padding: '1rem 2rem' }}>
-                                    {inv.client.name}
-                                  </td>
-                                  <td style={{ padding: '1rem 2rem' }}>
-                                    {new Date(inv.date).toLocaleDateString(
-                                      'es-ES',
-                                    )}
-                                  </td>
-                                  <td
-                                    style={{
-                                      padding: '1rem 2rem',
-                                      fontWeight: '600',
-                                      textAlign: 'right',
-                                    }}
-                                  >
-                                    €
-                                    {inv.total.toLocaleString('es-ES', {
-                                      minimumFractionDigits: 2,
-                                    })}
-                                  </td>
-                                  <td
-                                    style={{
-                                      padding: '1rem 2rem',
-                                      textAlign: 'center',
-                                    }}
-                                  >
-                                    <PaidToggle id={inv.id} initialStatus={inv.paid} />
-                                  </td>
-                                  <td
-                                    style={{
-                                      padding: '1rem 2rem',
-                                      textAlign: 'right',
-                                    }}
-                                  >
-                                    <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                                      <Link
-                                        href={`/facturas/${inv.id}`}
-                                        className="btn-icon"
-                                        title="Ver/Descargar"
-                                      >
-                                        📄
-                                      </Link>
-                                      <DeleteButton id={inv.id} type="invoice" />
-                                    </div>
-                                  </td>
+                      return (
+                        <section key={quarter} className="bg-bg-secondary rounded-custom shadow-custom-sm border border-border-base overflow-hidden">
+                          <div className="px-8 py-4 bg-bg-primary border-b border-border-base flex justify-between items-center sm:flex-row flex-col gap-2">
+                            <h3 className="text-lg font-bold text-text-primary">Trimestre {quarter}</h3>
+                            <span className="text-accent-primary font-bold">
+                              Subtotal Trimestre: €{qTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                            </span>
+                          </div>
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse">
+                              <thead>
+                                <tr className="bg-bg-primary/50">
+                                  <th className="px-8 py-3 text-xs font-bold uppercase tracking-wider text-text-secondary border-b border-border-base">Nº Factura</th>
+                                  <th className="px-8 py-3 text-xs font-bold uppercase tracking-wider text-text-secondary border-b border-border-base">Cliente</th>
+                                  <th className="px-8 py-3 text-xs font-bold uppercase tracking-wider text-text-secondary border-b border-border-base">Fecha</th>
+                                  <th className="px-8 py-3 text-xs font-bold uppercase tracking-wider text-text-secondary border-b border-border-base text-right">Total</th>
+                                  <th className="px-8 py-3 text-xs font-bold uppercase tracking-wider text-text-secondary border-b border-border-base text-center">Estado</th>
+                                  <th className="px-8 py-3 text-xs font-bold uppercase tracking-wider text-text-secondary border-b border-border-base text-right">Acciones</th>
                                 </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </section>
-                    );
-                  })}
+                              </thead>
+                              <tbody className="divide-y divide-border-base">
+                                {qInvoices.map((inv: any) => (
+                                  <tr key={inv.id} className="hover:bg-bg-primary/30 transition-colors">
+                                    <td className="px-8 py-4 font-bold text-text-primary">{inv.invoiceNumber}</td>
+                                    <td className="px-8 py-4 text-sm font-medium">{inv.client.name}</td>
+                                    <td className="px-8 py-4 text-sm text-text-secondary">{new Date(inv.date).toLocaleDateString('es-ES')}</td>
+                                    <td className="px-8 py-4 font-bold text-right text-text-primary">
+                                      €{inv.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                                    </td>
+                                    <td className="px-8 py-4 text-center">
+                                      <PaidToggle id={inv.id} initialStatus={inv.paid} />
+                                    </td>
+                                    <td className="px-8 py-4">
+                                      <div className="flex justify-end gap-2">
+                                        <Link href={`/facturas/${inv.id}`} className="btn-icon hover:text-accent-primary" title="Ver/Descargar">
+                                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                                          </svg>
+                                        </Link>
+                                        <DeleteButton id={inv.id} type="invoice" />
+                                      </div>
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </section>
+                      );
+                    })}
+                </div>
               </div>
             );
           })

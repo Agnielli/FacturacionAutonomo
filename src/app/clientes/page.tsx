@@ -7,11 +7,11 @@ export default async function ClientesPage() {
   const clients = await getClients();
 
   return (
-    <div className="container" style={{ paddingBottom: '4rem' }}>
-      <header className="header" style={{ marginBottom: '2rem' }}>
+    <div className="container pb-16">
+      <header className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 mb-10">
         <div>
-          <h1>Mis Clientes</h1>
-          <p style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Directorio de clientes recurrentes</p>
+          <h1 className="text-3xl font-extrabold tracking-tight text-text-primary">Mis Clientes</h1>
+          <p className="text-text-secondary mt-1 font-medium">Directorio de clientes recurrentes</p>
         </div>
       </header>
       

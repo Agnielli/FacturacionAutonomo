@@ -103,19 +103,11 @@ export default function InvoiceForm({
   return (
     <form
       onSubmit={handleSubmit}
-      style={{
-        background: 'var(--bg-secondary)',
-        padding: '2rem',
-        borderRadius: 'var(--radius)',
-        boxShadow: 'var(--shadow-sm)',
-        border: '1px solid var(--border-color)',
-        maxWidth: '900px',
-        margin: '0 auto',
-      }}
+      className="bg-bg-secondary p-8 rounded-custom shadow-custom-sm border border-border-base max-w-[1000px] mx-auto animate-in fade-in slide-in-from-bottom-4 duration-300"
     >
-      <div className="form-grid">
-        <div className="form-group full-width">
-          <label htmlFor="client" className="form-label">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="md:col-span-2 space-y-2">
+          <label htmlFor="client" className="block text-sm font-medium text-text-secondary">
             Cliente
           </label>
           <input
@@ -135,8 +127,8 @@ export default function InvoiceForm({
           </datalist>
         </div>
 
-        <div className="form-group">
-          <label htmlFor="invoiceNumber" className="form-label">
+        <div className="space-y-2">
+          <label htmlFor="invoiceNumber" className="block text-sm font-medium text-text-secondary">
             Número de Factura
           </label>
           <input
@@ -151,8 +143,8 @@ export default function InvoiceForm({
           />
         </div>
 
-        <div className="form-group">
-          <label htmlFor="date" className="form-label">
+        <div className="space-y-2">
+          <label htmlFor="date" className="block text-sm font-medium text-text-secondary">
             Fecha de Emisión
           </label>
           <input
@@ -165,36 +157,19 @@ export default function InvoiceForm({
           />
         </div>
 
-        <div
-          className="full-width"
-          style={{ marginTop: '1.5rem', marginBottom: '1rem' }}
-        >
-          <h3
-            style={{
-              fontSize: '1.1rem',
-              marginBottom: '1rem',
-              borderBottom: '1px solid var(--border-color)',
-              paddingBottom: '0.5rem',
-            }}
-          >
+        <div className="md:col-span-2 pt-6">
+          <h3 className="text-lg font-semibold text-text-primary border-b border-border-base pb-3 mb-6">
             Conceptos / Líneas de Factura
           </h3>
 
-          <div className="items-list">
+          <div className="space-y-4">
             {items.map((item, index) => (
               <div
                 key={index}
-                className="item-row"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1fr 80px 120px 100px 40px',
-                  gap: '1rem',
-                  marginBottom: '1rem',
-                  alignItems: 'end',
-                }}
+                className="grid grid-cols-1 md:grid-cols-[1fr_80px_120px_100px_40px] gap-4 items-end animate-in fade-in slide-in-from-left-2 duration-200"
               >
-                <div className="form-group">
-                  <label className="form-label" style={{ fontSize: '0.75rem' }}>
+                <div className="space-y-2">
+                  <label className="block text-[0.7rem] uppercase tracking-wider font-bold text-text-secondary">
                     Descripción
                   </label>
                   <input
@@ -208,8 +183,8 @@ export default function InvoiceForm({
                     required
                   />
                 </div>
-                <div className="form-group">
-                  <label className="form-label" style={{ fontSize: '0.75rem' }}>
+                <div className="space-y-2">
+                  <label className="block text-[0.7rem] uppercase tracking-wider font-bold text-text-secondary">
                     Cant.
                   </label>
                   <input
@@ -222,8 +197,8 @@ export default function InvoiceForm({
                     required
                   />
                 </div>
-                <div className="form-group">
-                  <label className="form-label" style={{ fontSize: '0.75rem' }}>
+                <div className="space-y-2">
+                  <label className="block text-[0.7rem] uppercase tracking-wider font-bold text-text-secondary">
                     Precio (€)
                   </label>
                   <input
@@ -237,27 +212,24 @@ export default function InvoiceForm({
                     required
                   />
                 </div>
-                <div className="form-group">
-                  <label className="form-label" style={{ fontSize: '0.75rem' }}>
+                <div className="space-y-2">
+                  <label className="block text-[0.7rem] uppercase tracking-wider font-bold text-text-secondary">
                     Subtotal
                   </label>
-                  <div style={{ padding: '0.625rem 0', fontWeight: '500' }}>
+                  <div className="py-3 font-semibold text-text-primary">
                     €{item.total.toFixed(2)}
                   </div>
                 </div>
-                <div className="form-group">
+                <div className="flex justify-end pb-1">
                   <button
                     type="button"
                     onClick={() => removeItem(index)}
-                    className="btn btn-secondary"
-                    style={{
-                      padding: '0.5rem',
-                      minWidth: 'auto',
-                      marginBottom: '0.2rem',
-                    }}
+                    className="btn-icon text-red-500 border-red-100 hover:bg-red-50 hover:border-red-200"
                     disabled={items.length === 1}
                   >
-                    🗑️
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -267,56 +239,32 @@ export default function InvoiceForm({
           <button
             type="button"
             onClick={addItem}
-            className="btn"
-            style={{
-              marginTop: '0.5rem',
-              background: 'btn-secondary',
-              color: 'var(--primary)',
-              border: '1px solid var(--border-color)',
-              fontWeight: '500',
-            }}
+            className="mt-6 flex items-center gap-2 px-4 py-2 text-sm font-medium text-accent-primary border border-accent-primary/20 rounded-custom hover:bg-accent-primary hover:text-white transition-all duration-200"
           >
-            + Añadir Concepto
+            <span>+</span> Añadir Concepto
           </button>
         </div>
 
-        <div
-          className="form-group full-width"
-          style={{
-            marginTop: '1.5rem',
-            padding: '1.5rem',
-            background: 'var(--bg-primary)',
-            borderRadius: 'var(--radius)',
-            textAlign: 'right',
-          }}
-        >
-          <div
-            style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)' }}
-          >
-            Base Imponible: <strong>€{subtotal.toFixed(2)}</strong>
+        <div className="md:col-span-2 md:ml-auto w-full md:w-[350px] mt-8 p-6 bg-bg-primary rounded-custom border border-border-base text-right space-y-3">
+          <div className="flex justify-between text-text-secondary">
+            <span>Base Imponible:</span>
+            <span className="font-semibold text-text-primary">€{subtotal.toFixed(2)}</span>
           </div>
-          <div
-            style={{ marginBottom: '0.5rem', color: 'var(--text-secondary)' }}
-          >
-            IVA (21%): <strong>€{tax.toFixed(2)}</strong>
+          <div className="flex justify-between text-text-secondary">
+            <span>IVA (21%):</span>
+            <span className="font-semibold text-text-primary">€{tax.toFixed(2)}</span>
           </div>
-          <div
-            style={{
-              fontSize: '1.5rem',
-              fontWeight: '700',
-              color: 'var(--primary)',
-            }}
-          >
-            TOTAL FACTURA: €{total.toFixed(2)}
+          <div className="flex justify-between pt-3 border-t border-border-base text-xl font-bold text-accent-primary">
+            <span>TOTAL:</span>
+            <span>€{total.toFixed(2)}</span>
           </div>
         </div>
 
-        <div className="form-group full-width" style={{ marginTop: '2rem' }}>
+        <div className="md:col-span-2 pt-8">
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn-primary w-full py-4 text-lg shadow-lg shadow-accent-primary/20"
             disabled={loading}
-            style={{ width: '100%', padding: '1rem', fontSize: '1.1rem' }}
           >
             {loading ? 'Guardando...' : 'Emitir Factura'}
           </button>
