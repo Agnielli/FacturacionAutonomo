@@ -46,3 +46,17 @@ model InvoiceItem {
   invoiceId   String
   invoice     Invoice @relation(fields: [invoiceId], references: [id])
 }
+
+model Expense {
+  id          String   @id @default(uuid())
+  description String
+  supplier    String?
+  category    String?
+  amount      Float
+  tax         Float
+  total       Float
+  date        DateTime
+  paid        Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

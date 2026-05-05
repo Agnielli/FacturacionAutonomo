@@ -1,12 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { deleteInvoice, deleteClient } from '@/lib/actions'
+import { deleteInvoice, deleteClient, deleteExpense } from '@/lib/actions'
 import { useRouter } from 'next/navigation'
 
 interface DeleteButtonProps {
   id: string
-  type: 'invoice' | 'client'
+  type: 'invoice' | 'client' | 'expense'
   confirmMessage?: string
 }
 
@@ -15,9 +15,10 @@ export default function DeleteButton({ id, type, confirmMessage }: DeleteButtonP
   const router = useRouter()
 
   const handleDelete = async () => {
-    const defaultMsg = type === 'invoice' 
-      ? '¿Estás seguro de que deseas eliminar esta factura? Estás acción no se puede deshacer.' 
-      : '¿Estás seguro de que deseas eliminar este cliente? Solo se puede eliminar si no tiene facturas asociadas.'
+    let defaultMsg = ''
+    if (type === 'invoice') defaultMsg = '¿Estás seguro de que deseas eliminar esta factura?';
+    else if (type === 'client') defaultMsg = '¿Estás seguro de que deseas eliminar este cliente? Solo se puede eliminar si no tiene facturas asociadas.';
+    else if (type === 'expense') defaultMsg = '¿Estás seguro de que deseas eliminar este gasto?';
     
     if (!confirm(confirmMessage || defaultMsg)) return
 
@@ -25,8 +26,10 @@ export default function DeleteButton({ id, type, confirmMessage }: DeleteButtonP
     try {
       if (type === 'invoice') {
         await deleteInvoice(id)
-      } else {
+      } else if (type === 'client') {
         await deleteClient(id)
+      } else if (type === 'expense') {
+        await deleteExpense(id)
       }
       router.refresh()
     } catch (error: any) {

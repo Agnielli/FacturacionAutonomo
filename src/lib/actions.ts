@@ -1,7 +1,9 @@
 'use server'
+// Force reload after prisma generation
 
 import prisma from './prisma'
 import { revalidatePath } from 'next/cache'
+import { sendInvoiceEmail } from './email'
 
 export async function getClients() {
   return await prisma.client.findMany({
@@ -17,7 +19,6 @@ export async function getInvoices() {
 }
 
 export async function deleteInvoice(id: string) {
-  // Prisma 6+ handles cascade if defined, but using explicit delete for safety
   await prisma.invoiceItem.deleteMany({
     where: { invoiceId: id }
   })
@@ -29,7 +30,6 @@ export async function deleteInvoice(id: string) {
 }
 
 export async function deleteClient(id: string) {
-  // Check if client has invoices
   const invoicesCount = await prisma.invoice.count({
     where: { clientId: id }
   })
@@ -91,7 +91,6 @@ export async function updateClient(id: string, data: { name: string; email?: str
 }
 
 export async function updateInvoice(id: string, data: any) {
-  // Delete old items
   await prisma.invoiceItem.deleteMany({ where: { invoiceId: id } });
 
   const invoice = await prisma.invoice.update({
@@ -198,7 +197,6 @@ export async function generateMonthlyInvoices() {
   let skippedCount = 0;
 
   for (const template of RECURRENT_CLIENTS) {
-    // Check if invoice already exists for this client and month
     const existing = await prisma.invoice.findFirst({
       where: {
         clientId: template.id,
@@ -244,4 +242,61 @@ export async function generateMonthlyInvoices() {
 
   revalidatePath('/');
   return { created: createdCount, skipped: skippedCount };
+}
+
+// --- EXPENSE ACTIONS ---
+
+export async function getExpenses() {
+  return await prisma.expense.findMany({
+    orderBy: { date: 'desc' }
+  })
+}
+
+export async function createExpense(data: {
+  description: string;
+  supplier?: string;
+  category?: string;
+  amount: number;
+  tax: number;
+  total: number;
+  date: string;
+}) {
+  const expense = await prisma.expense.create({
+    data: {
+      ...data,
+      date: new Date(data.date)
+    }
+  })
+  revalidatePath('/gastos')
+  revalidatePath('/')
+  return expense
+}
+
+export async function deleteExpense(id: string) {
+  const expense = await prisma.expense.delete({
+    where: { id }
+  })
+  revalidatePath('/gastos')
+  revalidatePath('/')
+  return expense
+}
+
+export async function sendInvoiceAction(id: string, email: string) {
+  const invoice = await prisma.invoice.findUnique({
+    where: { id },
+    include: { client: true }
+  })
+
+  if (!invoice) throw new Error('Factura no encontrada')
+
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+  const link = `${baseUrl}/facturas/${id}`
+
+  return await sendInvoiceEmail({
+    to: email,
+    invoiceNumber: invoice.invoiceNumber,
+    clientName: invoice.clientName || invoice.client?.name || 'Cliente',
+    total: invoice.total,
+    link
+  })
 }

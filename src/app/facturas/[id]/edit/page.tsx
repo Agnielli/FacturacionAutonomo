@@ -11,6 +11,8 @@ export default async function EditInvoicePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  if (!id) return notFound();
+
   const invoice = await getInvoiceById(id);
   const clients = await getClients();
 

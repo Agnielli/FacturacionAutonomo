@@ -1,16 +1,23 @@
-import { getInvoices } from '@/lib/actions';
+import { getInvoices, getExpenses } from '@/lib/actions';
 import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
 import GenerateMonthlyButton from '@/components/GenerateMonthlyButton';
 import PaidToggle from '@/components/PaidToggle';
+import FinancialCharts from '@/components/FinancialCharts';
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const invoices = await getInvoices();
+  const invoices = (await getInvoices()) || [];
+  const expenses = (await getExpenses()) || [];
   const currentYear = new Date().getFullYear();
+  
   const currentYearInvoices = invoices.filter(
-    (inv: any) => new Date(inv.date).getFullYear() === currentYear,
+    (inv: any) => inv?.date && new Date(inv.date).getFullYear() === currentYear,
+  );
+  
+  const currentYearExpenses = expenses.filter(
+    (exp: any) => exp?.date && new Date(exp.date).getFullYear() === currentYear,
   );
   
   const currentYearTotal = currentYearInvoices.reduce(
@@ -25,10 +32,17 @@ export default async function Home() {
     (acc: number, inv: any) => acc + (inv.tax || 0),
     0,
   );
+  
+  const currentYearExpensesTotal = currentYearExpenses.reduce(
+    (acc: number, exp: any) => acc + (exp.total || 0),
+    0,
+  );
+  
   const currentYearRetention = currentYearSubtotal * 0.19;
   const currentYearLiquido = currentYearSubtotal - currentYearRetention;
-  
-  const currentYearCount = currentYearInvoices.length;
+  const currentYearRealProfit = currentYearLiquido - currentYearExpensesTotal;
+
+  // Grouping logic...
 
   // Grouping logic (using Local Time as per user preference)
   const groupedInvoices = invoices.reduce((acc: any, inv: any) => {
@@ -63,39 +77,40 @@ export default async function Home() {
       </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-transform duration-300">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">
-            Total Facturado (IVA incl.)
-          </h3>
+        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-all duration-300">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">Ingresos (IVA incl.)</h3>
           <p className="text-2xl font-bold text-text-primary">
             €{currentYearTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
+          <div className="text-[10px] text-text-secondary mt-1 font-medium">Facturas emitidas en {currentYear}</div>
         </div>
-        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-transform duration-300">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">
-            Suma de IVA (21%)
-          </h3>
-          <p className="text-2xl font-bold text-text-secondary">
-            €{currentYearVat.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
-          </p>
-        </div>
-        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-transform duration-300">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">
-            Retención IRPF (19% s/Base)
-          </h3>
+
+        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-all duration-300">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">Gastos (IVA incl.)</h3>
           <p className="text-2xl font-bold text-red-500">
-            -€{currentYearRetention.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+            €{currentYearExpensesTotal.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
+          <div className="text-[10px] text-text-secondary mt-1 font-medium">Gastos registrados en {currentYear}</div>
         </div>
-        <div className="bg-bg-secondary p-6 rounded-custom border-2 border-accent-primary shadow-lg shadow-accent-primary/5 group hover:-translate-y-1 transition-transform duration-300">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-accent-primary mb-2">
-            Total Líquido ({currentYear})
-          </h3>
-          <p className="text-2xl font-extrabold text-accent-primary">
-            €{currentYearLiquido.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+
+        <div className="bg-bg-secondary p-6 rounded-custom border border-border-base shadow-custom-sm group hover:-translate-y-1 transition-all duration-300">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary mb-2">IVA Neto a Pagar</h3>
+          <p className="text-2xl font-bold text-orange-500">
+            €{(currentYearVat - expenses.reduce((a,e) => a + e.tax, 0)).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
           </p>
+          <div className="text-[10px] text-text-secondary mt-1 font-medium">IVA Repercutido - Soportado</div>
+        </div>
+
+        <div className="bg-bg-secondary p-6 rounded-custom border-2 border-accent-primary shadow-lg shadow-accent-primary/5 group hover:-translate-y-1 transition-all duration-300">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-accent-primary mb-2">Beneficio Neto Real</h3>
+          <p className="text-2xl font-extrabold text-accent-primary">
+            €{currentYearRealProfit.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+          </p>
+          <div className="text-[10px] text-text-secondary mt-1 font-medium">Después de IRPF y Gastos</div>
         </div>
       </div>
+
+      <FinancialCharts invoices={invoices} expenses={expenses} />
 
       <main className="space-y-12">
         {invoices.length === 0 ? (

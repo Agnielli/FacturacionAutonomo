@@ -10,8 +10,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Gestor de Facturas',
-  description: 'Aplicación para gestionar facturas emitidas y clientes',
+  title: 'Sabariego Invoices',
+  description: 'Gestión profesional de facturas y gastos',
+  manifest: '/manifest.json',
+  themeColor: '#4f46e5',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 };
 
 export default function RootLayout({
@@ -31,12 +34,24 @@ export default function RootLayout({
               <span className="text-2xl">🧾</span>
               <span>Sabariego Invoices</span>
             </Link>
-            <div className="flex gap-6">
+            <div className="flex gap-8">
               <Link
                 href="/clientes"
-                className="text-text-secondary hover:text-accent-primary transition-colors"
+                className="text-text-secondary hover:text-accent-primary transition-colors text-sm uppercase tracking-wider font-bold"
               >
-                Mis Clientes
+                Clientes
+              </Link>
+              <Link
+                href="/gastos"
+                className="text-text-secondary hover:text-accent-primary transition-colors text-sm uppercase tracking-wider font-bold"
+              >
+                Gastos
+              </Link>
+              <Link
+                href="/impuestos"
+                className="text-text-secondary hover:text-accent-primary transition-colors text-sm uppercase tracking-wider font-bold"
+              >
+                Impuestos
               </Link>
             </div>
             <div className="ml-auto">

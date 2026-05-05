@@ -2,6 +2,7 @@ import { getInvoiceById } from '@/lib/actions';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import PrintButton from '@/components/PrintButton';
+import EmailButton from '@/components/EmailButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,6 +12,8 @@ export default async function InvoicePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  if (!id) return notFound();
+
   const invoice = (await getInvoiceById(id)) as any;
 
   if (!invoice) {
@@ -41,7 +44,10 @@ export default async function InvoicePage({
           </svg>
           <span className="font-medium">Volver</span>
         </Link>
-        <PrintButton />
+        <div className="flex gap-4">
+          <EmailButton id={id} clientEmail={invoice.client?.email} />
+          <PrintButton />
+        </div>
       </header>
 
       <div
