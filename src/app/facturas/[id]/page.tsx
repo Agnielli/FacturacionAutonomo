@@ -45,9 +45,10 @@ export default async function InvoicePage({
       </header>
 
       <div
-        className="invoice-paper bg-bg-secondary p-8 sm:p-16 rounded-custom shadow-custom-lg border border-border-base mx-auto max-w-[850px] animate-in fade-in zoom-in-95 duration-500"
+        className="invoice-paper bg-bg-secondary p-8 sm:p-12 md:p-16 rounded-custom shadow-custom-lg border border-border-base mx-auto max-w-[800px] animate-in fade-in zoom-in-95 duration-500 print:shadow-none print:border-none print:p-0 print:m-0 flex flex-col"
         id="invoice-content"
       >
+        <div className="flex-grow">
         <div className="flex justify-between items-start mb-16">
           <div>
             <h1 className="text-5xl font-black tracking-tighter text-text-primary mb-2">
@@ -75,7 +76,7 @@ export default async function InvoicePage({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-12 mb-16">
           <div className="space-y-4">
             <h3 className="text-xs uppercase tracking-widest font-black text-accent-primary pb-2 border-b border-border-base">
               EMISOR
@@ -96,11 +97,11 @@ export default async function InvoicePage({
               </p>
             </div>
           </div>
-          <div className="space-y-4 text-right md:text-left">
-            <h3 className="text-xs uppercase tracking-widest font-black text-accent-primary pb-2 border-b border-border-base md:text-right">
+          <div className="space-y-4">
+            <h3 className="text-xs uppercase tracking-widest font-black text-accent-primary pb-2 border-b border-border-base md:text-right print:text-right">
               CLIENTE
             </h3>
-            <div className="text-[15px] leading-relaxed text-text-secondary">
+            <div className="text-[15px] leading-relaxed text-text-secondary md:text-right print:text-right">
               <p className="break-words">
                 <strong className="text-text-primary/80">Nombre:</strong>{' '}
                 {invoice.clientName || invoice.client.name}
@@ -170,7 +171,7 @@ export default async function InvoicePage({
           </table>
         </div>
 
-        <div className="ml-auto w-full md:w-80 space-y-3 mb-16">
+        <div className="ml-auto w-full md:w-80 print:w-80 space-y-3 mb-16">
           <div className="flex justify-between text-text-secondary text-sm">
             <span>Sub-total:</span>
             <span className="font-semibold text-text-primary">
@@ -199,8 +200,9 @@ export default async function InvoicePage({
             </span>
           </div>
         </div>
+        </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-end gap-8 pt-8 border-t border-border-base text-text-secondary/60">
+        <div className="flex flex-col md:flex-row print:flex-row justify-between items-end gap-8 pt-8 border-t border-border-base text-text-secondary/60">
           <div className="space-y-4 w-full">
             <h3 className="text-xs uppercase tracking-widest font-black text-text-primary/40">
               INFORMACIÓN DE PAGO

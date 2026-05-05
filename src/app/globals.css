@@ -212,10 +212,16 @@
 
 /* Print specific styles */
 @media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
   body {
     background: white !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 210mm; /* A4 Width */
   }
   
   .no-print, .header, .btn, .btn-secondary, .btn-primary, nav {
@@ -231,10 +237,33 @@
   
   .invoice-paper {
     box-shadow: none !important;
-    padding: 0 !important;
+    border: none !important;
+    padding: 20mm !important;
     width: 100% !important;
     max-width: 100% !important;
     border-radius: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+    color: black !important;
+    min-height: 280mm !important;
+  }
+
+  /* Help with spacing on A4 */
+  .invoice-header, .mb-16, .mb-12 {
+    margin-bottom: 2rem !important;
+  }
+
+  table {
+    page-break-inside: auto;
+  }
+
+  tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+
+  .text-5xl {
+    font-size: 3rem !important;
   }
 }
 
