@@ -281,7 +281,7 @@ export async function deleteExpense(id: string) {
   return expense
 }
 
-export async function sendInvoiceAction(id: string, email: string) {
+export async function sendInvoiceAction(id: string, email: string, pdfBase64?: string) {
   const invoice = await prisma.invoice.findUnique({
     where: { id },
     include: { client: true }
@@ -292,11 +292,20 @@ export async function sendInvoiceAction(id: string, email: string) {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
   const link = `${baseUrl}/facturas/${id}`
 
+  const attachments = pdfBase64 ? [
+    {
+      filename: `Factura_${invoice.invoiceNumber}.pdf`,
+      content: pdfBase64.split("base64,")[1],
+      encoding: 'base64'
+    }
+  ] : [];
+
   return await sendInvoiceEmail({
     to: email,
     invoiceNumber: invoice.invoiceNumber,
     clientName: invoice.clientName || invoice.client?.name || 'Cliente',
     total: invoice.total,
-    link
+    link,
+    attachments
   })
 }

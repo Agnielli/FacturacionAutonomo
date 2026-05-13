@@ -1,39 +1,47 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: process.env.SMTP_SECURE === 'true',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
+  },
+});
 
 export async function sendInvoiceEmail({
   to,
   invoiceNumber,
   clientName,
   total,
-  link
+  link,
+  attachments
 }: {
   to: string;
   invoiceNumber: string;
   clientName: string;
   total: number;
   link: string;
+  attachments?: any[];
 }) {
   try {
-    const apiKey = process.env.RESEND_API_KEY;
-    
-    if (!apiKey || apiKey === 'tu_api_key_aqui') {
-      console.warn('RESEND_API_KEY is missing or invalid. Email simulation mode.');
+    if (!process.env.SMTP_USER || !process.env.SMTP_PASSWORD) {
+      console.warn('AVISO: SMTP no configurado en el archivo .env.');
       return { 
         success: false, 
-        error: 'Falta la API Key de Resend. Por favor, añádela a tu archivo .env' 
+        error: 'Faltan los datos del servidor SMTP (SMTP_USER, SMTP_PASSWORD) en tu archivo .env' 
       };
     }
 
-    const resend = new Resend(apiKey);
-
-    const { data, error } = await resend.emails.send({
-      from: 'Facturas Sabariego <onboarding@resend.dev>',
-      to: [to],
+    const mailOptions = {
+      from: process.env.SMTP_FROM || '"Enrique Sabariego" <enrique@saiolab.com>',
+      to: to,
       subject: `Factura ${invoiceNumber} - Enrique Sabariego García`,
       html: `
         <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
           <h2 style="color: #4f46e5;">Hola, ${clientName}</h2>
-          <p>Espero que estés bien. Te adjunto el enlace para ver y descargar tu factura correspondiente a este periodo.</p>
+          <p>Espero que estés bien. Te adjunto la factura <strong>${invoiceNumber}</strong> en PDF correspondiente a este periodo.</p>
           
           <div style="background-color: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <p style="margin: 0; color: #64748b; font-size: 12px; text-transform: uppercase; font-weight: bold;">Número de Factura</p>
@@ -43,25 +51,24 @@ export async function sendInvoiceEmail({
             <p style="margin: 5px 0 0 0; font-size: 24px; font-weight: 800; color: #4f46e5;">€${total.toFixed(2)}</p>
           </div>
           
-          <a href="${link}" style="display: inline-block; background-color: #4f46e5; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-top: 10px;">Ver Factura Completa</a>
+          <p style="font-size: 14px; color: #64748b;">También puedes verla online aquí:</p>
+          <a href="${link}" style="display: inline-block; background-color: #4f46e5; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; margin-bottom: 20px;">Ver Online</a>
           
           <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;" />
-          <p style="font-size: 12px; color: #94a3b8;">
-            Enrique Sabariego García<br/>
-            77336240M<br/>
-            Garrucha, Almería
+          <p style="font-size: 12px; color: #94a3b8; line-height: 1.6;">
+            <strong>Enrique Sabariego García</strong><br/>
+            NIF: 77336240M<br/>
+            04630 Garrucha (Almería)
           </p>
         </div>
       `,
-    });
+      attachments: attachments
+    };
 
-    if (error) {
-      throw error;
-    }
-
-    return { success: true, data };
+    const info = await transporter.sendMail(mailOptions);
+    return { success: true, data: info };
   } catch (error) {
-    console.error('Email error:', error);
-    return { success: false, error };
+    console.error('Error enviando email:', error);
+    return { success: false, error: 'No se pudo enviar el correo. Revisa la configuración SMTP.' };
   }
 }
