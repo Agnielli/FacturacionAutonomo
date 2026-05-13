@@ -72,3 +72,38 @@ export async function sendInvoiceEmail({
     return { success: false, error: 'No se pudo enviar el correo. Revisa la configuración SMTP.' };
   }
 }
+
+export async function sendPasswordResetEmail(email: string, token: string) {
+  const resetUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password?token=${token}`;
+  
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM || '"Enrique Sabariego" <info@saiolab.com>',
+      to: email,
+      subject: 'Recuperación de Contraseña - Facturación',
+      html: `
+        <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+          <h2 style="color: #4f46e5;">Recuperación de Contraseña</h2>
+          <p>Has solicitado restablecer tu contraseña. Haz clic en el botón de abajo para continuar:</p>
+          
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="${resetUrl}" style="display: inline-block; background-color: #4f46e5; color: white; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">Restablecer Contraseña</a>
+          </div>
+          
+          <p style="font-size: 14px; color: #64748b;">Este enlace caducará en 1 hora. Si no has solicitado esto, puedes ignorar este correo.</p>
+          
+          <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;" />
+          <p style="font-size: 12px; color: #94a3b8;">
+            <strong>Enrique Sabariego García</strong>
+          </p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return { success: true };
+  } catch (error) {
+    console.error('Error enviando email de reset:', error);
+    return { success: false, error: 'Error al enviar el email' };
+  }
+}
