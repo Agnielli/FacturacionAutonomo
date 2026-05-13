@@ -1,6 +1,6 @@
 import { auth } from "@/auth"
 
-export const proxy = auth((req) => {
+const authProxy = auth((req) => {
   const isLoggedIn = !!req.auth
   const { nextUrl } = req
 
@@ -22,6 +22,9 @@ export const proxy = auth((req) => {
 
   return undefined
 })
+
+export const proxy = authProxy
+export default authProxy
 
 export const config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],

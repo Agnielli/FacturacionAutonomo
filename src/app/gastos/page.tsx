@@ -2,9 +2,17 @@ import { getExpenses, deleteExpense } from '@/lib/actions';
 import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
 
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+
 export const dynamic = 'force-dynamic';
 
 export default async function GastosPage() {
+  const session = await auth();
+  if (!session) {
+    redirect('/login');
+  }
+
   const expenses = (await getExpenses()) || [];
   const currentYear = new Date().getFullYear();
   

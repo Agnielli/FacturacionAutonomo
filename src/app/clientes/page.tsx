@@ -1,9 +1,17 @@
 import { getClients } from '@/lib/actions'
 import ClientList from '@/components/ClientList'
 
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+
 export const dynamic = 'force-dynamic';
 
 export default async function ClientesPage() {
+  const session = await auth();
+  if (!session) {
+    redirect('/login');
+  }
+
   const clients = await getClients();
 
   return (

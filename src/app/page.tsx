@@ -5,9 +5,17 @@ import GenerateMonthlyButton from '@/components/GenerateMonthlyButton';
 import PaidToggle from '@/components/PaidToggle';
 import FinancialCharts from '@/components/FinancialCharts';
 
+import { auth } from '@/auth';
+import { redirect } from 'next/navigation';
+
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
+  const session = await auth();
+  if (!session) {
+    redirect('/login');
+  }
+
   const invoices = (await getInvoices()) || [];
   const expenses = (await getExpenses()) || [];
   const currentYear = new Date().getFullYear();
