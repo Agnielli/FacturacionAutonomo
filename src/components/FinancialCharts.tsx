@@ -4,6 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell
 } from 'recharts';
+import { useState, useEffect } from 'react';
 
 interface FinancialChartsProps {
   invoices: any[];
@@ -14,7 +15,21 @@ const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', '
 const COLORS = ['#4f46e5', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#6366f1'];
 
 export default function FinancialCharts({ invoices, expenses }: FinancialChartsProps) {
+  const [isMounted, setIsMounted] = useState(false);
   const currentYear = new Date().getFullYear();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        <div className="lg:col-span-2 bg-bg-secondary p-8 rounded-custom border border-border-base shadow-custom-sm h-[400px] animate-pulse"></div>
+        <div className="bg-bg-secondary p-8 rounded-custom border border-border-base shadow-custom-sm h-[400px] animate-pulse"></div>
+      </div>
+    );
+  }
 
   // 1. Monthly data for Bar Chart
   const monthlyData = MONTHS.map((name, index) => {
@@ -49,7 +64,7 @@ export default function FinancialCharts({ invoices, expenses }: FinancialChartsP
       <div className="lg:col-span-2 bg-bg-secondary p-8 rounded-custom border border-border-base shadow-custom-sm">
         <h3 className="text-sm font-bold uppercase tracking-widest text-text-secondary mb-8">Evolución Ingresos vs Gastos {currentYear}</h3>
         <div className="h-[350px] w-full">
-          <ResponsiveContainer width="100%" height="100%">
+          <ResponsiveContainer width="100%" height="100%" minWidth={0}>
             <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} dy={10} />
@@ -70,7 +85,7 @@ export default function FinancialCharts({ invoices, expenses }: FinancialChartsP
       <div className="bg-bg-secondary p-8 rounded-custom border border-border-base shadow-custom-sm">
         <h3 className="text-sm font-bold uppercase tracking-widest text-text-secondary mb-8">Distribución de Gastos</h3>
         <div className="h-[350px] w-full flex flex-col items-center">
-          <ResponsiveContainer width="100%" height="80%">
+          <ResponsiveContainer width="100%" height="80%" minWidth={0}>
             <PieChart>
               <Pie
                 data={pieData}
