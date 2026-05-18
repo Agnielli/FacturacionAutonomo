@@ -64,7 +64,7 @@ export default function FinancialCharts({ invoices, expenses }: FinancialChartsP
       <div className="lg:col-span-2 bg-bg-secondary p-8 rounded-custom border border-border-base shadow-custom-sm">
         <h3 className="text-sm font-bold uppercase tracking-widest text-text-secondary mb-8">Evolución Ingresos vs Gastos {currentYear}</h3>
         <div className="h-[350px] w-full">
-          <ResponsiveContainer width="100%" height="100%" minWidth={0}>
+          <ResponsiveContainer width="100%" height="100%" minWidth={1} minHeight={1}>
             <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
               <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#94a3b8', fontSize: 12 }} dy={10} />
@@ -85,7 +85,7 @@ export default function FinancialCharts({ invoices, expenses }: FinancialChartsP
       <div className="bg-bg-secondary p-8 rounded-custom border border-border-base shadow-custom-sm">
         <h3 className="text-sm font-bold uppercase tracking-widest text-text-secondary mb-8">Distribución de Gastos</h3>
         <div className="h-[350px] w-full flex flex-col items-center">
-          <ResponsiveContainer width="100%" height="80%" minWidth={0}>
+          <ResponsiveContainer width="100%" height="80%" minWidth={1} minHeight={1}>
             <PieChart>
               <Pie
                 data={pieData}
