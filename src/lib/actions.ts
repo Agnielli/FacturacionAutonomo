@@ -45,10 +45,10 @@ export async function deleteClient(id: string) {
   return client
 }
 
-export async function toggleInvoicePaid(id: string, paid: boolean) {
+export async function updateInvoiceStatus(id: string, status: string) {
   const invoice = await prisma.invoice.update({
     where: { id },
-    data: { paid }
+    data: { status }
   })
   revalidatePath('/')
   return invoice
@@ -157,10 +157,20 @@ export async function createInvoice(data: any) {
 export async function generateMonthlyInvoices() {
   const RECURRENT_CLIENTS = [
     {
+      id: "B04795894",
+      name: "Vespublicidad Agencia Publicitaria y Creativa SLU",
+      amount: 200,
+      items: [
+        { description: "Mantenimiento Técnico Webs VesSport.es y SorteosGNG.es", quantity: 1, unitPrice: 30, total: 30 },
+        { description: "Servicios de marketing y estrategia: Bolsa cerrada de 8,5 h/mes (a 20 €/h)", quantity: 1, unitPrice: 170, total: 170 }
+      ]
+    },
+
+    {
       id: "B04897385",
       name: "G Mas I Igual Solución, SLU",
       concept: "Gestión y mantenimiento web, blog y SEO orgánico en giservicios.es (mes {month} {year})",
-      amount: 100
+      amount: 200
     },
     {
       id: "45598348C",
@@ -210,9 +220,19 @@ export async function generateMonthlyInvoices() {
     }
 
     const nextInvoiceNumber = await getNextInvoiceNumber();
-    const concept = template.concept
-      .replace('{month}', monthName)
-      .replace('{year}', year.toString());
+    const clientItems = template.items 
+      ? template.items.map(item => ({
+          description: item.description,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          total: item.total
+        }))
+      : [{
+          description: template.concept.replace('{month}', monthName).replace('{year}', year.toString()),
+          quantity: 1,
+          unitPrice: template.amount,
+          total: template.amount
+        }];
 
     const client = await prisma.client.findUnique({ where: { id: template.id } });
 
@@ -228,12 +248,7 @@ export async function generateMonthlyInvoices() {
         tax: template.amount * 0.21,
         total: template.amount * 1.21,
         items: {
-          create: [{
-            description: concept,
-            quantity: 1,
-            unitPrice: template.amount,
-            total: template.amount
-          }]
+          create: clientItems
         }
       }
     });
@@ -300,12 +315,23 @@ export async function sendInvoiceAction(id: string, email: string, pdfBase64?: s
     }
   ] : [];
 
-  return await sendInvoiceEmail({
+  const result = await sendInvoiceEmail({
     to: email,
     invoiceNumber: invoice.invoiceNumber,
     clientName: invoice.clientName || invoice.client?.name || 'Cliente',
     total: invoice.total,
     link,
     attachments
-  })
+  });
+
+  if (invoice.status === 'GENERADA') {
+    await prisma.invoice.update({
+      where: { id },
+      data: { status: 'ENVIADA' }
+    });
+    revalidatePath('/');
+    revalidatePath(`/facturas/${id}`);
+  }
+
+  return result;
 }

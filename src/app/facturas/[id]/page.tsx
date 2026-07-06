@@ -55,7 +55,7 @@ export default async function InvoicePage({
         id="invoice-content"
       >
         <div className="flex-grow">
-        <div className="flex justify-between items-start mb-16">
+        <div className="flex justify-between items-start mb-16 print:mb-6 print:mb-6 print:mb-6 print:mb-6">
           <div>
             <h1 className="text-5xl font-black tracking-tighter text-text-primary mb-2">
               FACTURA
@@ -82,14 +82,14 @@ export default async function InvoicePage({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-12 print:gap-4 mb-16 print:mb-6">
           <div className="space-y-4">
             <h3 className="text-xs uppercase tracking-widest font-black text-accent-primary pb-2 border-b border-border-base">
               EMISOR
             </h3>
-            <div className="text-[15px] leading-relaxed text-text-secondary">
+            <div className="text-[15px] print:text-xs leading-relaxed text-text-secondary">
               <p>
-                <strong className="text-text-primary text-base">
+                <strong className="text-text-primary text-base print:text-sm">
                   Enrique Sabariego García
                 </strong>
               </p>
@@ -107,7 +107,7 @@ export default async function InvoicePage({
             <h3 className="text-xs uppercase tracking-widest font-black text-accent-primary pb-2 border-b border-border-base md:text-right print:text-right">
               CLIENTE
             </h3>
-            <div className="text-[15px] leading-relaxed text-text-secondary md:text-right print:text-right">
+            <div className="text-[15px] print:text-xs leading-relaxed text-text-secondary md:text-right print:text-right">
               <p className="break-words">
                 <strong className="text-text-primary/80">Nombre:</strong>{' '}
                 {invoice.clientName || invoice.client.name}
@@ -124,11 +124,11 @@ export default async function InvoicePage({
           </div>
         </div>
 
-        <div className="overflow-hidden border border-border-base rounded-custom mb-12">
+        <div className="overflow-hidden border border-border-base rounded-custom mb-12 print:mb-6">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-bg-primary">
-                <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-text-secondary">
+                <th className="px-8 py-4 print:px-4 print:py-2 text-xs font-bold uppercase tracking-widest text-text-secondary">
                   DESCRIPCIÓN
                 </th>
                 <th className="px-8 py-4 text-xs font-bold uppercase tracking-widest text-text-secondary text-center">
@@ -143,13 +143,13 @@ export default async function InvoicePage({
               {invoice.items && invoice.items.length > 0 ? (
                 invoice.items.map((item: any) => (
                   <tr key={item.id}>
-                    <td className="px-8 py-6 text-text-primary font-medium">
+                    <td className="px-8 py-6 print:px-4 print:py-2 print:text-sm text-text-primary font-medium">
                       {item.description}
                     </td>
-                    <td className="px-8 py-6 text-center text-text-secondary font-medium">
+                    <td className="px-8 py-6 print:px-4 print:py-2 print:text-sm text-center text-text-secondary font-medium">
                       {item.quantity}
                     </td>
-                    <td className="px-8 py-6 text-right text-text-primary font-bold">
+                    <td className="px-8 py-6 print:px-4 print:py-2 print:text-sm text-right text-text-primary font-bold">
                       €
                       {item.unitPrice.toLocaleString('es-ES', {
                         minimumFractionDigits: 2,
@@ -159,13 +159,13 @@ export default async function InvoicePage({
                 ))
               ) : (
                 <tr>
-                  <td className="px-8 py-6 text-text-primary font-medium">
+                  <td className="px-8 py-6 print:px-4 print:py-2 print:text-sm text-text-primary font-medium">
                     {invoice.details || 'Servicios profesionales'}
                   </td>
-                  <td className="px-8 py-6 text-center text-text-secondary font-medium">
+                  <td className="px-8 py-6 print:px-4 print:py-2 print:text-sm text-center text-text-secondary font-medium">
                     1
                   </td>
-                  <td className="px-8 py-6 text-right text-text-primary font-bold">
+                  <td className="px-8 py-6 print:px-4 print:py-2 print:text-sm text-right text-text-primary font-bold">
                     €
                     {invoice.amount.toLocaleString('es-ES', {
                       minimumFractionDigits: 2,

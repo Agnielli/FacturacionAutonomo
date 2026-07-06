@@ -2,7 +2,7 @@ import { getInvoices, getExpenses } from '@/lib/actions';
 import Link from 'next/link';
 import DeleteButton from '@/components/DeleteButton';
 import GenerateMonthlyButton from '@/components/GenerateMonthlyButton';
-import PaidToggle from '@/components/PaidToggle';
+import InvoiceStatusSelect from '@/components/InvoiceStatusSelect';
 import FinancialCharts from '@/components/FinancialCharts';
 
 import { auth } from '@/auth';
@@ -183,7 +183,7 @@ export default async function Home() {
                                       €{inv.total.toLocaleString('es-ES', { minimumFractionDigits: 2 })}
                                     </td>
                                     <td className="px-8 py-4 text-center">
-                                      <PaidToggle id={inv.id} initialStatus={inv.paid} />
+                                      <InvoiceStatusSelect id={inv.id} initialStatus={inv.status} />
                                     </td>
                                     <td className="px-8 py-4">
                                       <div className="flex justify-end gap-2">
